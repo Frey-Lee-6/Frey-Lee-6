@@ -1,0 +1,292 @@
+:root {
+  color-scheme: light;
+  --bg: #eef2f6;
+  --panel: #ffffff;
+  --ink: #18202a;
+  --muted: #667487;
+  --line: #d8e0ea;
+  --accent: #0f766e;
+  --accent-2: #2563eb;
+  --danger: #b42318;
+  --success: #087443;
+  --shadow: 0 20px 60px rgba(20, 35, 55, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, rgba(15, 118, 110, 0.12), transparent 36%),
+    linear-gradient(315deg, rgba(37, 99, 235, 0.12), transparent 32%),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+}
+
+.widget {
+  width: min(460px, calc(100vw - 28px));
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.topbar {
+  -webkit-app-region: drag;
+}
+
+.topbar,
+.rate-hero,
+.insights,
+.comparison,
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.eyebrow,
+.muted,
+footer,
+label,
+article span,
+small {
+  color: var(--muted);
+}
+
+.eyebrow,
+h1,
+p {
+  margin: 0;
+}
+
+.eyebrow {
+  font-size: 12px;
+}
+
+h1 {
+  margin-top: 2px;
+  font-size: 28px;
+  letter-spacing: 0;
+}
+
+.window-actions {
+  display: flex;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--accent);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.icon-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.icon-button.is-loading span {
+  display: inline-block;
+  animation: spin 0.9s linear infinite;
+}
+
+.danger-button {
+  color: var(--danger);
+}
+
+.danger-button:hover {
+  border-color: rgba(180, 35, 24, 0.28);
+  background: #fff5f4;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rate-hero {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #f7fafc;
+  border: 1px solid var(--line);
+}
+
+#currentRate {
+  display: block;
+  margin: 4px 0;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.status {
+  min-width: 118px;
+  text-align: right;
+}
+
+.status span {
+  display: inline-flex;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #064e3b;
+  background: #dff8ef;
+  font-size: 12px;
+}
+
+.status span[data-tone="loading"] {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.status span[data-tone="warning"] {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.status span[data-tone="danger"] {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.status small {
+  display: block;
+  margin-top: 8px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 42px 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  align-items: end;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+
+select,
+input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 10px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.swap-button {
+  width: 42px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--accent-2);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.insights {
+  margin-top: 14px;
+}
+
+article {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+article strong {
+  display: block;
+  margin: 6px 0 4px;
+  font-size: 22px;
+}
+
+.comparison {
+  display: block;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f7fafc;
+  border: 1px solid var(--line);
+}
+
+#baseReceived {
+  display: block;
+  margin-top: 4px;
+  font-size: 26px;
+}
+
+.delta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.danger strong {
+  color: var(--danger);
+}
+
+.success strong {
+  color: var(--success);
+}
+
+.mini-chart {
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+footer {
+  margin-top: 12px;
+  font-size: 11px;
+}
+
+@media (max-width: 420px) {
+  .controls,
+  .delta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .swap-button {
+    width: 100%;
+  }
+
+  #currentRate {
+    font-size: 38px;
+  }
+}

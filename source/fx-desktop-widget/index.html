@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>汇率桌面插件</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="widget" aria-live="polite">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">实时汇率</p>
+          <h1><span id="pairLabel">EUR/CNY</span></h1>
+        </div>
+        <div class="window-actions">
+          <button class="icon-button" id="refreshButton" title="刷新" aria-label="刷新">
+            <span aria-hidden="true">↻</span>
+          </button>
+          <button class="icon-button" id="minButton" title="最小化" aria-label="最小化">
+            <span aria-hidden="true">−</span>
+          </button>
+          <button class="icon-button danger-button" id="closeButton" title="关闭" aria-label="关闭">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="rate-hero">
+        <div>
+          <p class="muted">1 <span id="baseName">EUR</span> =</p>
+          <strong id="currentRate">--</strong>
+          <p class="muted"><span id="quoteName">CNY</span></p>
+        </div>
+        <div class="status">
+          <span id="providerStatus">等待刷新</span>
+          <small id="lastUpdated">--</small>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="汇率设置">
+        <label>
+          基础币种
+          <select id="baseCurrency"></select>
+        </label>
+        <button class="swap-button" id="swapButton" title="交换币种" aria-label="交换币种">
+          <span aria-hidden="true">⇄</span>
+        </button>
+        <label>
+          报价币种
+          <select id="quoteCurrency"></select>
+        </label>
+        <label>
+          近 N 年
+          <input id="yearsInput" type="number" min="1" max="30" step="1" value="5" />
+        </label>
+        <label>
+          兑换金额
+          <input id="amountInput" type="number" min="1" step="100" value="10000" />
+        </label>
+      </section>
+
+      <section class="insights">
+        <article>
+          <span>近 N 年最低点</span>
+          <strong id="lowRate">--</strong>
+          <small id="lowDate">--</small>
+        </article>
+        <article>
+          <span>近 N 年最高点</span>
+          <strong id="highRate">--</strong>
+          <small id="highDate">--</small>
+        </article>
+      </section>
+
+      <section class="comparison">
+        <div>
+          <p id="amountLabel">用 10,000 CNY 兑换 EUR</p>
+          <strong id="baseReceived">--</strong>
+        </div>
+        <div class="delta-grid">
+          <article class="danger">
+            <span>相比最低点少得</span>
+            <strong id="lossCny">--</strong>
+            <small id="lossHint">按当前汇率折算为 CNY</small>
+          </article>
+          <article class="success">
+            <span>相比最高点多得</span>
+            <strong id="savingCny">--</strong>
+            <small id="savingHint">按当前汇率折算为 CNY</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="mini-chart" aria-label="历史汇率曲线">
+        <svg id="chart" viewBox="0 0 420 120" role="img" aria-label="近 N 年汇率趋势"></svg>
+      </section>
+
+      <footer>
+        <span>数据源：Frankfurter</span>
+        <span>每 60 秒自动刷新</span>
+      </footer>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

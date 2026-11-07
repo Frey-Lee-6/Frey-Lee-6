@@ -1,0 +1,16 @@
+{
+  "name": "fx-desktop-widget",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Windows desktop-style FX widget for live and historical exchange-rate comparison.",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "serve": "npx http-server . -p 4173 -c-1",
+    "test": "node tests/core.test.mjs"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "http-server": "^14.1.1"
+  }
+}
