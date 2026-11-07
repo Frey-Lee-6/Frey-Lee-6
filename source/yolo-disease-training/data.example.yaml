@@ -1,0 +1,6 @@
+# Replace with the absolute path to the prepared dataset folder.
+path: /path/to/dataset
+train: train/images
+val: val/images
+test: test/images
+names: ["0 BrownSpot", "1 RiceBlast", "2 BacterialBlight"]

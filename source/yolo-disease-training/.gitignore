@@ -1,0 +1,6 @@
+dataset/
+train/
+runs/
+*.pt
+.venv/
+__pycache__/

@@ -5,3 +5,7 @@
 **技术栈** YOLO、Flask、Spring Boot、Vue。
 
 **项目材料** 现有 Web 源码与训练脚本。模型性能和部署状态待验证。
+
+[查看 YOLO 训练源码与数据配置示例](../source/yolo-disease-training)
+
+公开版本包含训练与数据划分脚本。Web 工程、数据集和模型权重未包含在这个源码目录中。
