@@ -1,56 +1,111 @@
-# 汇率桌面插件设计
+# FX Desktop Widget
 
-这是一个 Windows 桌面小组件原型，默认显示 `EUR/CNY`，并支持切换任意 Frankfurter 覆盖的币种。
+Compare a currency pair's latest available reference rate with historical highs and lows, then see how those rates affect an exchange amount.
 
-## 已实现
+**JavaScript · Electron · Windows PowerShell**
 
-- 实时汇率卡片：显示 `1 基础币种 = N 报价币种`。
-- 近 N 年最高点 / 最低点：按历史日频数据计算。
-- 兑换损益对比：默认按“用报价币种买基础币种”计算。`EUR/CNY` 时就是“用人民币买欧元”。
-- 任意币种切换：币种列表来自 Frankfurter `/currencies`。
-- 设置记忆与本地缓存：重启后保留币种、N 年、金额；网络短暂失败时可使用未过期缓存。
-- Windows 窗口控制：Electron 模式支持拖动、最小化、关闭和置顶。
-- 数据源抽象：`src/app.js` 的 `providers` 对象可以继续添加 OANDA、Wise、ExchangeRate-API 等实时源。
-- Electron 外壳：安装依赖后可作为 Windows 悬浮窗口运行。
+[Project overview](../../projects/fx-widget.md) · [Technical design](docs/design.md) · [Core tests](tests/core.test.mjs)
 
-## 运行
+## What you can do
 
-最简单方式：双击 `启动汇率插件.bat`。这是免安装 Windows 桌面版，不需要 npm，也不需要 Electron，启动后不会保留命令窗口。
+- Choose a base and quote currency, with EUR/CNY as the default.
+- Inspect historical extremes and the dates on which they occurred.
+- Compare the amount received at the current, lowest, and highest rates.
+- Change the lookback period and exchange amount.
+- Keep preferences between sessions in the web/Electron implementation.
+- Run an Electron desktop window or the included Windows PowerShell implementation.
 
-想让它像普通软件一样出现在桌面：双击 `InstallFxWidget.bat` 或 `安装到桌面.bat`。它会把程序复制到 `%LOCALAPPDATA%\FxDesktopWidget`，并在桌面创建 `FX Desktop Widget` 快捷方式。以后直接双击桌面图标即可，启动时不会出现命令窗口。
+## Choose a launch mode
 
-发给别人使用：把这个文件夹发给对方，让对方双击 `InstallFxWidget.bat`。卸载时双击 `UninstallFxWidget.bat`。
+| Mode | Requirements | Entry point |
+| --- | --- | --- |
+| Electron desktop | Node.js and npm, internet access for dependencies and rates | `npm start` after installation |
+| Browser preview | Node.js and npm | `npm run serve` |
+| Windows PowerShell | Windows with Windows PowerShell and WinForms | `StartFxWidget.bat` |
+| Windows shortcut installation | Same requirements as the PowerShell mode | `InstallFxWidget.bat` |
 
-如果只想预览网页版本：双击 `预览网页版本.bat`，然后打开 `http://127.0.0.1:4173/index.html`。
+The Electron application uses the HTML/JavaScript interface. The PowerShell application is a separate implementation in `FxWidget.ps1`.
 
-说明：免安装桌面版使用 Windows PowerShell / WinForms，默认中文界面，右上角 `EN` 按钮可以切换英文。
+## Quick start
 
-直接打开 `index.html` 可以预览。如果浏览器限制本地请求，可以启动本地服务：
-
-```powershell
-python -m http.server 4173 --bind 127.0.0.1
-```
-
-或者使用 npm 脚本：
-
-```powershell
-npm install
-npm run serve
-```
-
-桌面窗口模式：
-
-```powershell
+```sh
+git clone https://github.com/Frey-Lee-6/Frey-Lee-6.git
+cd Frey-Lee-6/source/fx-desktop-widget
 npm install
 npm start
 ```
 
-验证核心计算：
+The package declares Electron 31 and http-server 14 as development dependencies. Use a Node.js environment compatible with those packages.
 
-```powershell
+For a browser preview, run the following command from the same directory.
+
+```sh
+npm run serve
+```
+
+Open `http://127.0.0.1:4173`. The window minimize and close buttons are available when the page runs inside Electron.
+
+### Windows launcher and shortcuts
+
+Double-click `StartFxWidget.bat` to start the PowerShell application. Its dependencies are separate from npm.
+
+To add a desktop shortcut, run `InstallFxWidget.bat`. The installer copies the widget to `%LOCALAPPDATA%\FxDesktopWidget` and creates a desktop shortcut. Use `UninstallFxWidget.bat` to remove that installation.
+
+## Understanding the calculation
+
+The exchange rate represents quote-currency units per base-currency unit. The entered amount is a budget in the quote currency.
+
+```text
+base currency received = quote-currency budget / exchange rate
+```
+
+For an illustrative EUR/CNY comparison used by the tests, a 10,000 CNY budget at a rate of 8 buys 1,250 EUR. The low/high comparison values express differences in the base currency received, converted back to the quote currency at the current rate.
+
+The implementation is in [fx-core.mjs](src/fx-core.mjs).
+
+## Code layout
+
+```text
+fx-desktop-widget/
+├── index.html              Page structure
+├── src/
+│   ├── app.js              State, requests, events, and rendering
+│   ├── fx-core.mjs         Calculation and normalization functions
+│   └── styles.css          Widget styling
+├── electron/
+│   ├── main.js             Desktop window
+│   └── preload.js          Window-control bridge
+├── tests/core.test.mjs     Calculation tests
+├── FxWidget.ps1            Windows PowerShell implementation
+├── StartFxWidget.bat       PowerShell launcher
+├── InstallFxWidget.bat     Desktop shortcut installation
+└── docs/design.md          Data flow and calculation details
+```
+
+## Run the tests
+
+```sh
 npm test
 ```
 
-## 数据说明
+Expected output includes `core tests passed`. The tests cover ISO date formatting, numeric bounds and fallbacks, historical-rate normalization, minimum/maximum selection, and the exchange comparison calculation.
 
-默认使用 Frankfurter。它是免费、免 API key 的汇率 API，适合第一版验证和历史区间计算，但它不是秒级银行报价；如果需要真正交易级实时价，可以在 `providers` 中增加付费实时报价源，并保持 UI 与计算逻辑不变。
+These tests have passed during portfolio preparation. Live API behavior, Electron packaging, and Windows installation require separate end-to-end checks.
+
+## Data and caching
+
+The provider adapter in `src/app.js` calls Frankfurter for currencies, latest rates, and historical rates. Quotes are cached for 60 seconds, while history and currency-list data use a 12-hour cache. Preferences and cached values are stored in `localStorage`.
+
+Expired data is not a reliable offline fallback in the current implementation. If data requests fail, the interface reports the failure. Live data availability depends on the provider.
+
+The data source supplies reference rates. Refreshing the interface every minute does not imply minute-by-minute changes in those rates. [Frankfurter documentation](https://frankfurter.dev/)
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| Dependencies are missing | Run `npm install` inside this directory. |
+| No exchange rate appears | Choose two different currencies and check access to the rate provider. |
+| A local-file preview fails | Use the HTTP preview command instead of opening `index.html` directly. |
+| PowerShell mode cannot start | Confirm Windows PowerShell is installed and review the launcher output. |
+| Labels appear in Chinese | The web UI currently uses Chinese labels. The PowerShell implementation has a language toggle. |
